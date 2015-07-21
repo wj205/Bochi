@@ -43,6 +43,7 @@ public class Arrow : MonoBehaviour {
 		if(Input.GetMouseButtonUp (0))
 		{
 			//SWITCH TO SHOOTING STATE
+			Debug.Log ("release");
 			_lineRenderer.enabled = false;
 			float shotSpeed = Mathf.Clamp (GetArrowMagnitude (), shotmin, shotmax);
 			_rigidbody.AddForce (transform.right * shotSpeed, ForceMode2D.Impulse);
@@ -122,6 +123,17 @@ public class Arrow : MonoBehaviour {
 		if(other.tag == "Goal")
 		{
 			GameController.WinLevel ();
+		}
+	}
+
+	void OnTriggerStay2D(Collider2D other) 
+	{
+		if(other.tag == "Gravity")
+		{
+			float pullForce = other.GetComponent<GravityObject>().pullForce;
+			Vector3 forceDirection = other.transform.position - transform.position;
+			Vector2 forceDirection2D = new Vector2(forceDirection.x, forceDirection.y);
+			_rigidbody.AddForce (forceDirection2D * pullForce, ForceMode2D.Force);
 		}
 	}
 

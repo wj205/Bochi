@@ -24,11 +24,11 @@ public class GravityObject : MonoBehaviour {
 		}
 	}*/
 
-	void OnTriggerStay2D(Collider2D other)
+	/*void OnTriggerStay2D(Collider2D other)
 	{
 		Debug.Log ("there's something inside of me");
 		Vector3 forceDirection = transform.position - other.transform.position;
 		Vector2 forceDirection2D = new Vector2(forceDirection.x, forceDirection.y);
 		other.GetComponent<Rigidbody2D>().AddForce (forceDirection2D.normalized * pullForce * Time.deltaTime);
-	}
+	}*/
 }
