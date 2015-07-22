@@ -124,6 +124,11 @@ public class Arrow : MonoBehaviour {
 		{
 			GameController.WinLevel ();
 		}
+		if(other.tag == "Death")
+		{
+			GameController.LoseLevel ();
+			Destroy(this.gameObject);
+		}
 	}
 
 	void OnTriggerStay2D(Collider2D other) 
