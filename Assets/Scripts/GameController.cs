@@ -24,7 +24,14 @@ public class GameController : MonoBehaviour {
 	{
 		//SWITCH TO GAME WON STATE
 		Debug.Log ("You Won!");
-		Time.timeScale = 0;
+		//int nextLevel = Application.loadedLevel + 1;
+		if(Application.loadedLevel < Application.levelCount - 1)
+		{
+			Application.LoadLevel (Application.loadedLevel + 1);
+		}else
+		{
+			Application.LoadLevel (0);
+		}
 	}
 	
 	public static void LoseLevel ()
