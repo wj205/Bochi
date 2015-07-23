@@ -131,14 +131,25 @@ public class Arrow : MonoBehaviour {
 		}
 	}
 
+	Vector2 exitVelocity;
 	void OnTriggerStay2D(Collider2D other) 
 	{
 		if(other.tag == "Gravity")
-		{
+		{		
 			float pullForce = other.GetComponent<GravityObject>().pullForce;
 			Vector3 forceDirection = other.transform.position - transform.position;
 			Vector2 forceDirection2D = new Vector2(forceDirection.x, forceDirection.y);
-			_rigidbody.AddForce (forceDirection2D * pullForce, ForceMode2D.Force);
+			float distance = Vector3.Distance (transform.position, other.transform.position);
+			_rigidbody.AddForce (forceDirection2D * pullForce / distance, ForceMode2D.Force);
+			exitVelocity = _rigidbody.velocity;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D other)
+	{
+		if(other.tag == "Gravity")
+		{
+			_rigidbody.velocity = exitVelocity;
 		}
 	}
 
