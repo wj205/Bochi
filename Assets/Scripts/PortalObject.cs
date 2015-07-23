@@ -24,22 +24,46 @@ public class PortalObject: MonoBehaviour {
 			if(portalExit.up)
 			{
 				other.transform.position = new Vector3(portalExit.transform.position.x - difference.x, portalExit.transform.position.y + portalExit.transform.localScale.y / 2f + other.transform.localScale.y / 2f, 0f);
-				other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.x, Mathf.Abs (otherVelocity.y));
+				if(this.right || this.left)
+				{
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.y, Mathf.Abs (otherVelocity.x));
+				}else
+				{
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.x, Mathf.Abs (otherVelocity.y));
+				}
 			}
 			if(portalExit.down)
 			{
 				other.transform.position = new Vector3(portalExit.transform.position.x - difference.x, portalExit.transform.position.y - portalExit.transform.localScale.y / 2f - other.transform.localScale.y / 2f, 0f);
-				other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.x, -Mathf.Abs (otherVelocity.y));
+				if(this.right || this.left)
+				{
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.y, -Mathf.Abs (otherVelocity.x));
+				}else
+				{
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.x, -Mathf.Abs (otherVelocity.y));
+				}
 			}
 			if(portalExit.right)
 			{
 				other.transform.position = new Vector3(portalExit.transform.position.x + portalExit.transform.localScale.x / 2f + other.transform.localScale.x / 2f, portalExit.transform.position.y - difference.y, 0f);
-				other.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Abs (otherVelocity.x), otherVelocity.y);
+				if(this.up || this.down)
+				{
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.y, Mathf.Abs (otherVelocity.x));
+				}else
+				{
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Abs (otherVelocity.x), otherVelocity.y);
+				}
 			}
 			if(portalExit.left)
 			{
 				other.transform.position = new Vector3(portalExit.transform.position.x - portalExit.transform.localScale.x / 2f - other.transform.localScale.x / 2f, portalExit.transform.position.y - difference.y, 0f);
-				other.GetComponent<Rigidbody2D>().velocity = new Vector2(-Mathf.Abs (otherVelocity.x), otherVelocity.y);
+				if(this.up || this.down)
+				{
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.y, -Mathf.Abs (otherVelocity.x));	
+				}else
+				{
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(-Mathf.Abs (otherVelocity.x), otherVelocity.y);
+				}
 			}
 			//Vector3 correctedDiff = new Vector3(difference.x, difference.y, 0f);
 			//other.transform.position = ((portalExit.transform.position - correctedDiff) + verticalPosModifier * (transform.up * (other.transform.localScale.y /2 + transform.localScale.y / 2)));
