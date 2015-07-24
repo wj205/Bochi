@@ -10,10 +10,13 @@ public class Arrow : MonoBehaviour {
 	GameController _gameController;
 	PlayerTrail _playerTrail;
 
+	public PlayerTrail playerTrailPrefab;
+
 	public Vector3 startPoint;
 	public float _gravity;
 	public float shotmin;
 	public float shotmax;
+	public bool movingState;
 
 	void Start()
 	{
@@ -23,9 +26,17 @@ public class Arrow : MonoBehaviour {
 		_lineRenderer = this.GetComponent<LineRenderer>();
 		_lineRenderer.enabled = false;
 		_gameController = GameObject.FindObjectOfType<GameController>().GetComponent<GameController>();
-		_playerTrail = GameObject.FindObjectOfType<PlayerTrail>().GetComponent<PlayerTrail>();
 		_rigidbody.gravityScale = 0;
 		startPoint = transform.position;
+		SpawnTrail();
+	}
+
+	void SpawnTrail()
+	{
+		if(GameObject.FindObjectOfType<PlayerTrail>() == null)
+		{
+			_playerTrail = Instantiate (playerTrailPrefab, this.transform.position, this.transform.rotation) as PlayerTrail;
+		}
 	}
 	
 	void Update () {
@@ -55,13 +66,11 @@ public class Arrow : MonoBehaviour {
 			//SWITCH TO SHOOTING STATE
 			Debug.Log ("release");
 			_lineRenderer.enabled = false;
-			if(_playerTrail.trailObjects.Count > 0)
-			{
-				_playerTrail.EraseTrail ();
-			}
 			float shotSpeed = Mathf.Clamp (GetArrowMagnitude (), shotmin, shotmax);
 			_rigidbody.AddForce (difference * shotSpeed, ForceMode2D.Impulse);
 			_rigidbody.gravityScale = _gravity;
+			ResetPlayerTrail();
+			movingState = true;
 		}
 	}
 
@@ -95,6 +104,13 @@ public class Arrow : MonoBehaviour {
 		float distance = Vector3.Distance (transform.position, mouseWorldPos);
 		return distance;
 	}
+
+	void ResetPlayerTrail()
+	{
+		Destroy (_playerTrail.gameObject);
+		_playerTrail = Instantiate (playerTrailPrefab, transform.position, transform.rotation) as PlayerTrail;
+	}
+
 
 	bool hasLost = false;
 	void CheckVisible()
