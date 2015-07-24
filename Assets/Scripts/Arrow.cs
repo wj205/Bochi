@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Arrow : MonoBehaviour {
 
 	Rigidbody2D _rigidbody;
 	Renderer _renderer;
 	LineRenderer _lineRenderer;
+	GameController _gameController;
+	PlayerTrail _playerTrail;
 
+	public Vector3 startPoint;
 	public float _gravity;
 	public float shotmin;
 	public float shotmax;
@@ -18,7 +22,10 @@ public class Arrow : MonoBehaviour {
 		_renderer = this.GetComponent<Renderer>();
 		_lineRenderer = this.GetComponent<LineRenderer>();
 		_lineRenderer.enabled = false;
+		_gameController = GameObject.FindObjectOfType<GameController>().GetComponent<GameController>();
+		_playerTrail = GameObject.FindObjectOfType<PlayerTrail>().GetComponent<PlayerTrail>();
 		_rigidbody.gravityScale = 0;
+		startPoint = transform.position;
 	}
 	
 	void Update () {
@@ -27,7 +34,11 @@ public class Arrow : MonoBehaviour {
 
 		//THIS MIGHT WORK BETTER ON PHONES/TABLETS
 		//HandleInputAlternateSolution();	
+
+		//I DON'T KNOW ABOUT THIS SPINNING SHIT, BUT RICH THINKS IT'S A COOL IDEA
 		//HandleSpinning ();
+
+		//JANKY WAY TO HANDLE LOSING
 		CheckVisible();
 	}
 
@@ -38,13 +49,16 @@ public class Arrow : MonoBehaviour {
 			//SWITCH TO AIMING STATE
 			transform.rotation = Quaternion.Euler (0f, 0f, GetArrowAngle());
 			DrawLine();
-			//Debug.Log (GetArrowMagnitude());
 		}
 		if(Input.GetMouseButtonUp (0))
 		{
 			//SWITCH TO SHOOTING STATE
 			Debug.Log ("release");
 			_lineRenderer.enabled = false;
+			if(_playerTrail.trailObjects.Count > 0)
+			{
+				_playerTrail.EraseTrail ();
+			}
 			float shotSpeed = Mathf.Clamp (GetArrowMagnitude (), shotmin, shotmax);
 			_rigidbody.AddForce (difference * shotSpeed, ForceMode2D.Impulse);
 			_rigidbody.gravityScale = _gravity;
@@ -93,7 +107,7 @@ public class Arrow : MonoBehaviour {
 			transform.position.y < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).y)
 			)
 		{
-			GameController.LoseLevel ();
+			_gameController.LoseLevel ();
 			hasLost = true;
 		}
 	}
@@ -123,12 +137,12 @@ public class Arrow : MonoBehaviour {
 		}
 		if(other.tag == "Goal")
 		{
-			GameController.WinLevel ();
+			_gameController.WinLevel ();
 		}
 		if(other.tag == "Death")
 		{
-			GameController.LoseLevel ();
-			Destroy(this.gameObject);
+			_gameController.LoseLevel ();
+			//Destroy(this.gameObject);
 		}
 	}
 
@@ -141,7 +155,7 @@ public class Arrow : MonoBehaviour {
 			Vector3 forceDirection = other.transform.position - transform.position;
 			Vector2 forceDirection2D = new Vector2(forceDirection.x, forceDirection.y);
 			float distance = Vector3.Distance (transform.position, other.transform.position);
-			_rigidbody.AddForce (forceDirection2D * pullForce / distance, ForceMode2D.Force);
+			_rigidbody.AddForce (forceDirection2D * pullForce / distance, ForceMode2D.Impulse);
 			exitVelocity = _rigidbody.velocity;
 		}
 	}
@@ -185,7 +199,7 @@ public class Arrow : MonoBehaviour {
 		{
 			_lineRenderer.enabled = false;
 			float shotSpeed = Mathf.Clamp (GetShotSpeed (), shotmin, shotmax);
-			_rigidbody.AddForce (transform.right * shotSpeed, ForceMode2D.Impulse);
+			_rigidbody.AddForce (mouseAngle.normalized * shotSpeed, ForceMode2D.Impulse);
 			_rigidbody.gravityScale = _gravity;
 		}
 	}
