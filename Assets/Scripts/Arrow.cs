@@ -46,16 +46,17 @@ public class Arrow : MonoBehaviour {
 			Debug.Log ("release");
 			_lineRenderer.enabled = false;
 			float shotSpeed = Mathf.Clamp (GetArrowMagnitude (), shotmin, shotmax);
-			_rigidbody.AddForce (transform.right * shotSpeed, ForceMode2D.Impulse);
+			_rigidbody.AddForce (difference * shotSpeed, ForceMode2D.Impulse);
 			_rigidbody.gravityScale = _gravity;
 		}
 	}
 
+	Vector3 difference;
 	float GetArrowAngle()
 	{
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		Vector3 mouseWorldPos = new Vector3(mousePos.x, mousePos.y, 0f);
-		Vector3 difference = (mouseWorldPos - transform.position).normalized;
+		difference = (mouseWorldPos - transform.position).normalized;
 		float lookAngle = Mathf.Rad2Deg * Mathf.Atan (difference.y/difference.x);
 		if(difference.x < 0)
 		{
