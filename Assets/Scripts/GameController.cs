@@ -24,7 +24,8 @@ public class GameController : MonoBehaviour {
 	{
 		//SWITCH TO GAME WON STATE
 		Debug.Log ("You Won!");
-		//int nextLevel = Application.loadedLevel + 1;
+
+		//DO THIS ON SOME INPUT IN THE WIN GAME STATE
 		if(Application.loadedLevel < Application.levelCount - 1)
 		{
 			Application.LoadLevel (Application.loadedLevel + 1);

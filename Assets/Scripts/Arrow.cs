@@ -27,7 +27,11 @@ public class Arrow : MonoBehaviour {
 
 		//THIS MIGHT WORK BETTER ON PHONES/TABLETS
 		//HandleInputAlternateSolution();	
+
+		//I DON'T KNOW ABOUT THIS SPINNING SHIT, BUT RICH THINKS IT'S A COOL IDEA
 		//HandleSpinning ();
+
+		//JANKY WAY TO HANDLE LOSING
 		CheckVisible();
 	}
 
@@ -38,7 +42,6 @@ public class Arrow : MonoBehaviour {
 			//SWITCH TO AIMING STATE
 			transform.rotation = Quaternion.Euler (0f, 0f, GetArrowAngle());
 			DrawLine();
-			//Debug.Log (GetArrowMagnitude());
 		}
 		if(Input.GetMouseButtonUp (0))
 		{
@@ -141,7 +144,7 @@ public class Arrow : MonoBehaviour {
 			Vector3 forceDirection = other.transform.position - transform.position;
 			Vector2 forceDirection2D = new Vector2(forceDirection.x, forceDirection.y);
 			float distance = Vector3.Distance (transform.position, other.transform.position);
-			_rigidbody.AddForce (forceDirection2D * pullForce / distance, ForceMode2D.Force);
+			_rigidbody.AddForce (forceDirection2D * pullForce / distance, ForceMode2D.Impulse);
 			exitVelocity = _rigidbody.velocity;
 		}
 	}
@@ -185,7 +188,7 @@ public class Arrow : MonoBehaviour {
 		{
 			_lineRenderer.enabled = false;
 			float shotSpeed = Mathf.Clamp (GetShotSpeed (), shotmin, shotmax);
-			_rigidbody.AddForce (transform.right * shotSpeed, ForceMode2D.Impulse);
+			_rigidbody.AddForce (mouseAngle.normalized * shotSpeed, ForceMode2D.Impulse);
 			_rigidbody.gravityScale = _gravity;
 		}
 	}
