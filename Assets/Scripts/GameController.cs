@@ -3,9 +3,14 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
+	Arrow _player;
+	PlayerTrail _playerTrail;
+
 	void Start()
 	{
 		Time.timeScale = 1;
+		_player = GameObject.FindObjectOfType<Arrow>().GetComponent<Arrow>();
+		_playerTrail = GameObject.FindObjectOfType<PlayerTrail>().GetComponent<PlayerTrail>();
 	}
 	
 	void Update () {
@@ -15,12 +20,16 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	public static void Restart () 
+	public void Restart () 
 	{
-		Application.LoadLevel (Application.loadedLevel); 
+		//Application.LoadLevel (Application.loadedLevel); 
+		_player.transform.position = _player.startPoint;
+		_player.transform.rotation = Quaternion.Euler (Vector3.zero);
+		_player.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+		_playerTrail.DrawTrail ();
 	}
 
-	public static void WinLevel () 
+	public void WinLevel () 
 	{
 		//SWITCH TO GAME WON STATE
 		Debug.Log ("You Won!");
@@ -35,9 +44,9 @@ public class GameController : MonoBehaviour {
 		}
 	}
 	
-	public static void LoseLevel ()
+	public void LoseLevel ()
 	{
 		//SWITCH TO GAME LOSE STATE
-		Debug.Log ("You Lost :(\nPress 'R' to try again");
+		Restart ();
 	}
 }
