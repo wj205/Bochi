@@ -112,19 +112,17 @@ public class Arrow : MonoBehaviour {
 	}
 
 
-	bool hasLost = false;
 	void CheckVisible()
 	{
 		//CHECK IF ALREADY IN LOSE STATE
-		if(!hasLost &&
-		   (transform.position.x > Camera.main.ViewportToWorldPoint (new Vector3(1, 0, Camera.main.nearClipPlane)).x ||
+		if(
+		    transform.position.x > Camera.main.ViewportToWorldPoint (new Vector3(1, 0, Camera.main.nearClipPlane)).x ||
 			transform.position.x < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).x ||
 			transform.position.y > Camera.main.ViewportToWorldPoint (new Vector3(0, 1, Camera.main.nearClipPlane)).y ||
-			transform.position.y < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).y)
+			transform.position.y < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).y
 			)
 		{
 			_gameController.LoseLevel ();
-			hasLost = true;
 		}
 	}
 
@@ -135,6 +133,7 @@ public class Arrow : MonoBehaviour {
 	
 	void OnCollisionEnter2D(Collision2D other)
 	{
+		Camera.main.GetComponent<CameraShake>().ScreenShake ();
 		if(other.gameObject.tag == "Red")
 		{
 			_renderer.material.color = Color.red;
