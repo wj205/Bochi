@@ -148,7 +148,7 @@ public class Arrow : MonoBehaviour {
 	{
 		if(other.tag == "Target")
 		{
-			Destroy (other.gameObject);
+			//Destroy (other.gameObject);
 		}
 		if(other.tag == "Goal")
 		{

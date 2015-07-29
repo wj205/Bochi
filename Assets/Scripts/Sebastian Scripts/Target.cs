@@ -7,7 +7,7 @@ public class Target : MonoBehaviour {
     private Fader _fader;
     private Collider2D _collider;
 
-    private TargetState state = TargetState.UNHIT;
+    public TargetState state = TargetState.UNHIT;
 
 	// Use this for initialization
 	void Start () {
@@ -18,7 +18,7 @@ public class Target : MonoBehaviour {
 	}
 
 
-    void SwitchToState(TargetState s)
+    public void SwitchToState(TargetState s)
     {
         this.state = s;
         switch (this.state)
@@ -34,6 +34,7 @@ public class Target : MonoBehaviour {
 
     protected virtual void SwitchToUnhit()
     {
+
         this._fader.SwitchToState(FadeState.IN);
         this._collider.enabled = true;
     }
@@ -48,13 +49,13 @@ public class Target : MonoBehaviour {
     {
         if (other.tag.Equals("Player"))
         {
-            this.SwitchToHit();
+            this.SwitchToState(TargetState.HIT);
             _levelController.CheckForWinCondition();
         }
     }
+}
 
-    private enum TargetState
-    {
-        UNHIT, HIT
-    }
+public enum TargetState
+{
+    UNHIT, HIT
 }
