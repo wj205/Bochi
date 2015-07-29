@@ -101,17 +101,11 @@ public class PlayerController : MonoBehaviour {
 
     void OnMoving() 
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            this.SwitchToState(PlayerState.IDLE);
-        }
+
     }
     void OnDisabled() 
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            this.SwitchToState(PlayerState.IDLE);
-        }
+
     }
 
     public void SwitchToState(PlayerState s)
