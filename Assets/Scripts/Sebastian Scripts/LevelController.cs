@@ -12,10 +12,11 @@ public class LevelController : MonoBehaviour {
     //target vars
     private Target[] _targets;
 
-    //private Player _player;
+    private PlayerController _player;
 
 	// Use this for initialization
 	void Start () {
+        this._player = GameObject.FindObjectOfType<PlayerController>();
         this._faders = GameObject.FindObjectsOfType<Fader>();
         this._targets = GameObject.FindObjectsOfType<Target>();
         this.SwitchToState(LevelState.LOADIN);
@@ -71,6 +72,7 @@ public class LevelController : MonoBehaviour {
     { 
         if (this.CheckForCompletedFade()) 
         {
+            Debug.Log("loading next level");
             this.LoadNextLevel();
         }
     }
@@ -78,6 +80,7 @@ public class LevelController : MonoBehaviour {
     public void SwitchToState(LevelState s)
     {
         this.state = s;
+        Debug.Log("LevelController is switching to state: " + this.state);
         switch (this.state)
         {
             case LevelState.LOADIN:
@@ -105,16 +108,28 @@ public class LevelController : MonoBehaviour {
             this._faders[i].fadeSpeed = this.fadeSpeed;
             this._faders[i].SwitchToState(FadeState.IN);
         }
+
+        _player.GetComponent<Fader>().SwitchToState(FadeState.OUT);
+
+        
     }
 
     void SwitchToIdle() 
     {
-        Debug.Log("LevelController is switching to idle.");
     }
     
-    void SwitchToWaiting() { }
+    void SwitchToWaiting() 
+    {
+    }
     void SwitchToPaused() { }
-    void SwitchToLoadOut() { }
+    
+    void SwitchToLoadOut() 
+    {
+        for (int i = 0; i < _faders.Length; i++)
+        {
+            this._faders[i].SwitchToState(FadeState.OUT);
+        }
+    }
 
 
     bool CheckForCompletedFade()
@@ -132,15 +147,28 @@ public class LevelController : MonoBehaviour {
 
     public void CheckForWinCondition()
     {
-        if (this.state.Equals(LevelState.WAITING))
+        bool won = true;
+
+        
+        for (int i = 0; i < _targets.Length; i++)
         {
-            
+            if (_targets[i].state.Equals(TargetState.UNHIT))
+            {
+                won = false;
+                break;
+            }
+        }
+
+        if (won)
+        {
+            this.SwitchToState(LevelState.LOADOUT);
         }
     }
 
 
     void LoadNextLevel()
     {
+        Debug.Log("Loading next level");
         Application.LoadLevel((Application.loadedLevel + 1) % Application.levelCount);
     }
 
@@ -151,7 +179,15 @@ public class LevelController : MonoBehaviour {
 
     void ResetLevel()
     {
-        this.SwitchToLoadIn();
+        this._player.SwitchToState(PlayerState.IDLE);
+
+        for (int i = 0; i < _targets.Length; i++)
+        {
+            this._targets[i].SwitchToState(TargetState.UNHIT);
+            Debug.Log(_targets[i].state);
+        }
+
+        this.SwitchToState(LevelState.LOADIN);
     }
 }
 

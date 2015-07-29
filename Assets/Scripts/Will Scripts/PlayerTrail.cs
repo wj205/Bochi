@@ -4,13 +4,13 @@ using System.Collections;
 public class PlayerTrail : MonoBehaviour {
 
 	TrailRenderer _trail;
-	Arrow _player;
+	PlayerController _player;
 
 	void Start()
 	{
 		_trail = this.GetComponent<TrailRenderer>();
 		_trail.time = Mathf.Infinity;
-		_player = GameObject.FindObjectOfType<Arrow>().GetComponent<Arrow>();
+        _player = GameObject.FindObjectOfType<PlayerController>();
 		this.transform.position = _player.transform.position;
 		_trail.startWidth = _player.transform.localScale.x;
 		_trail.endWidth = _player.transform.localScale.x;
@@ -23,7 +23,7 @@ public class PlayerTrail : MonoBehaviour {
 
 	void HandlePosition()
 	{
-		if(_player.movingState)
+		if(_player.state.Equals(PlayerState.MOVING))
 		{
 			this.transform.position = _player.transform.position;
 		}
