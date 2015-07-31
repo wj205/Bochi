@@ -6,7 +6,7 @@ public class Fader : MonoBehaviour {
 
     private Renderer _renderer;
     private Material _material;
-
+    private LevelController _levelController;
     public FadeState state;
 
     public float fadeSpeed = 5f;
@@ -17,13 +17,23 @@ public class Fader : MonoBehaviour {
 	void Start () {
         this._renderer = this.GetComponent<Renderer>();
         this._material = this._renderer.material;
-        this._originalColor = this._material.color;
+        this._levelController = GameObject.FindObjectOfType<LevelController>();
+        if (this.tag.Equals("Player") || this.tag.Equals("Obstacle"))
+        {
+            this._originalColor = this._levelController.levelColor;
+        }
+        else
+        {
+            this._originalColor = this._material.color;
+        }
         Color c = this._material.color;
         c.a = 0;
         _originalColorZeroAlpha = c;
         this._material.color = c;
 	}
-	
+
+    public Color GetColor() { return this._originalColor; }
+
 	// Update is called once per frame
 	void Update () {
         HandleStates();
@@ -88,10 +98,6 @@ public class Fader : MonoBehaviour {
     void SwitchToIdle() { }
     void SwitchToFadeOut() { }
 
-    public void SetColor(Color c)
-    {
-        this._material.color = c;
-    }
 
     public bool isVisible()
     {
@@ -110,6 +116,15 @@ public class Fader : MonoBehaviour {
         {
             return false;
         }
+    }
+
+
+    public void SetColor(Color c)
+    {
+        this._originalColor = c;
+        c.a = 0f;
+        this._originalColorZeroAlpha = c;
+        this.SwitchToState(FadeState.IN);
     }
 }
 
