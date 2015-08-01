@@ -9,6 +9,8 @@ public class LevelController : MonoBehaviour {
     public float fadeSpeed = 20f;
     private Fader[] _faders;
 
+    public Color levelColor;
+    
     //target vars
     private Target[] _targets;
 
@@ -52,10 +54,10 @@ public class LevelController : MonoBehaviour {
 
     void OnLoadIn() 
     {
-        if (this.CheckForCompletedFade())
-        {
+        //if (this.CheckForCompletedFade())
+        //{
             this.SwitchToState(LevelState.IDLE);
-        }
+        //}
     }
 
     void OnIdle() { }
@@ -72,7 +74,6 @@ public class LevelController : MonoBehaviour {
     { 
         if (this.CheckForCompletedFade()) 
         {
-            Debug.Log("loading next level");
             this.LoadNextLevel();
         }
     }
@@ -109,9 +110,12 @@ public class LevelController : MonoBehaviour {
             this._faders[i].SwitchToState(FadeState.IN);
         }
 
-        _player.GetComponent<Fader>().SwitchToState(FadeState.OUT);
-
+        if (!_player.staticStart)
+        {
+            _player.GetComponent<Fader>().SwitchToState(FadeState.OUT);
+        }
         
+
     }
 
     void SwitchToIdle() 
@@ -149,7 +153,6 @@ public class LevelController : MonoBehaviour {
     {
         bool won = true;
 
-        
         for (int i = 0; i < _targets.Length; i++)
         {
             if (_targets[i].state.Equals(TargetState.UNHIT))
@@ -177,14 +180,13 @@ public class LevelController : MonoBehaviour {
         Application.LoadLevel(0);
     }
 
-    void ResetLevel()
+    public void ResetLevel()
     {
         this._player.SwitchToState(PlayerState.IDLE);
 
         for (int i = 0; i < _targets.Length; i++)
         {
             this._targets[i].SwitchToState(TargetState.UNHIT);
-            Debug.Log(_targets[i].state);
         }
 
         this.SwitchToState(LevelState.LOADIN);

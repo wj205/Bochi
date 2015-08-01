@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -7,6 +8,9 @@ using System.Collections;
 [RequireComponent(typeof(Fader))]
 
 public class PlayerController : MonoBehaviour {
+
+    public bool staticStart = false;
+    private Vector3 _startPosition;
 
     private LevelController _levelController;
     private Renderer _renderer;
@@ -17,14 +21,18 @@ public class PlayerController : MonoBehaviour {
     private PlayerTrail _playerTrail;
     public PlayerTrail playerTrailPrefab;
 
+    public float lineMaxDist = 5f;
 
     private Vector3 _mousePosition = Vector3.zero;
     private Vector3 _mousePosition2D = Vector3.zero;
+    private bool _mouseover = false;
 
     public Vector3 startPoint;
     public float _gravity;
     public float shotmin;
     public float shotmax = 5f;
+
+    private List<PlayerTrail> _prevTrails = new List<PlayerTrail>();
 
     public PlayerState state;
 
@@ -35,6 +43,7 @@ public class PlayerController : MonoBehaviour {
         _rigidbody = this.GetComponent<Rigidbody2D>();
         _collider = this.GetComponent<Collider2D>();
         _lineRenderer = this.GetComponent<LineRenderer>();
+        _startPosition = this.transform.position;
 
         _playerTrail = Instantiate(playerTrailPrefab, this.transform.position, this.transform.rotation) as PlayerTrail;
 
@@ -52,6 +61,16 @@ public class PlayerController : MonoBehaviour {
     {
         _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         _mousePosition2D = new Vector3(_mousePosition.x, _mousePosition.y, 0f);
+
+
+        if (Physics2D.Raycast(_mousePosition, Vector2.zero))
+        {
+            _mouseover = true;
+        }
+        else
+        {
+            _mouseover = false;
+        }
     }
 
     void HandleStates()
@@ -78,7 +97,7 @@ public class PlayerController : MonoBehaviour {
         if (_levelController.state.Equals(LevelState.IDLE))
         {
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !_mouseover)
             {
                 this.SwitchToState(PlayerState.AIMING);
             }
@@ -131,27 +150,37 @@ public class PlayerController : MonoBehaviour {
 
     void SwitchToIdle() 
     {
-        _fader.SwitchToState(FadeState.OUT);
+        if (staticStart) this.transform.position = _startPosition;
+        _fader.SetColor(_levelController.levelColor);
+        _fader.SwitchToState(FadeState.IN);
         _rigidbody.velocity = Vector2.zero;
-        this.ResetPlayerTrail();
+       
     }
 
     void SwitchToAiming() 
     {
         _fader.SwitchToState(FadeState.IN);
         _collider.enabled = false;
-        this.transform.position = _mousePosition2D;
+        if (staticStart)
+        {
+            this.transform.position = _startPosition;
+        }
+        else
+        {
+            this.transform.position = _mousePosition2D;
+        }
+        
     }
 
     void SwitchToMoving() 
     {
+        this.ResetPlayerTrail();
         _levelController.SwitchToState(LevelState.WAITING);
         _collider.enabled = true;
         _lineRenderer.enabled = false;
         float shotSpeed = Mathf.Clamp(GetArrowMagnitude(), shotmin, shotmax);
         _rigidbody.AddForce(difference * shotSpeed, ForceMode2D.Impulse);
         _rigidbody.gravityScale = _gravity;
-        ResetPlayerTrail();
     }
 
     void SwitchToDisabled() { }
@@ -170,23 +199,35 @@ public class PlayerController : MonoBehaviour {
 
     void DrawLine()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 mouseWorldPos = new Vector3(mousePos.x, mousePos.y, 0f);
         _lineRenderer.enabled = true;
         _lineRenderer.SetPosition(0, this.transform.position);
-        _lineRenderer.SetPosition(1, mouseWorldPos);
+
+        if (Vector3.Distance(this.transform.position, _mousePosition2D) > lineMaxDist)
+        {
+            _lineRenderer.SetPosition(1, this.transform.position + (this.transform.right) * lineMaxDist);
+        }
+        else
+        {
+            _lineRenderer.SetPosition(1, _mousePosition2D);
+        }
     }
 
     float GetArrowMagnitude()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 mouseWorldPos = new Vector3(mousePos.x, mousePos.y, 0f);
-        float distance = Vector3.Distance(transform.position, mouseWorldPos);
-        return distance;
+        float distance = Vector3.Distance(transform.position, _mousePosition2D);
+        distance = distance > lineMaxDist ? lineMaxDist : distance;
+        return (distance / lineMaxDist) * shotmax;
     }
 
     void ResetPlayerTrail()
     {
+        for (int i = 0; i < _prevTrails.Count; i++)
+        {
+            Destroy(_prevTrails[i].gameObject);
+        }
+
+        _prevTrails.Clear();
+
         Destroy(_playerTrail.gameObject);
         _playerTrail = Instantiate(playerTrailPrefab, transform.position, transform.rotation) as PlayerTrail;
     }
@@ -196,10 +237,22 @@ public class PlayerController : MonoBehaviour {
         _playerTrail = Instantiate(playerTrailPrefab, this.transform.position, this.transform.rotation) as PlayerTrail;
     }
 
+    public void SetColor(Color c)
+    {
+        this._fader.SetColor(c);
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
 
+    }
+
+    public void PushNewTrail(Color c)
+    {
+        _prevTrails.Add(_playerTrail);
+        _playerTrail.connected = false;
+        this.SpawnTrail();
+        this.SetColor(c);
     }
 }
 
