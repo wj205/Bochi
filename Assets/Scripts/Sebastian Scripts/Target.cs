@@ -45,7 +45,7 @@ public class Target : MonoBehaviour {
         this._collider.enabled = false;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag.Equals("Player"))
         {

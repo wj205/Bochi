@@ -201,8 +201,8 @@ public class Arrow : MonoBehaviour {
 		}
 		if(Input.GetMouseButton (0))
 		{
-			float distance = Vector3.Distance (Camera.main.ScreenToViewportPoint (Input.mousePosition), initialMousePos);
-			float angle = Vector3.Angle (initialMousePos, Camera.main.ScreenToViewportPoint (Input.mousePosition));
+			//float distance = Vector3.Distance (Camera.main.ScreenToViewportPoint (Input.mousePosition), initialMousePos);
+			//float angle = Vector3.Angle (initialMousePos, Camera.main.ScreenToViewportPoint (Input.mousePosition));
 			mouseAngle = Camera.main.ScreenToViewportPoint (Input.mousePosition) - initialMousePos;
 			Debug.Log (mouseAngle.magnitude * 10f);
 			_lineRenderer.enabled = true;
