@@ -17,7 +17,8 @@ public class PortalObject: MonoBehaviour {
 	{
 		if(other.gameObject.tag == "Player")
 		{
-			Debug.Log ("do portal things");
+			PlayerController p = other.gameObject.GetComponent<PlayerController>();
+			p.PushNewTrail (p.GetComponent<Renderer>().material.color);
 			Vector3 hitPoint = other.transform.position;
 			Vector3 difference = transform.position - hitPoint;
 			Vector2 otherVelocity = other.GetComponent<Rigidbody2D>().velocity;
@@ -59,12 +60,13 @@ public class PortalObject: MonoBehaviour {
 				other.transform.position = new Vector3(portalExit.transform.position.x - portalExit.transform.localScale.x / 2f - other.transform.localScale.x / 2f, portalExit.transform.position.y - difference.y, 0f);
 				if(this.up || this.down)
 				{
-					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.y, -Mathf.Abs (otherVelocity.x));	
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(-otherVelocity.y, Mathf.Abs (otherVelocity.x));	
 				}else
 				{
 					other.GetComponent<Rigidbody2D>().velocity = new Vector2(-Mathf.Abs (otherVelocity.x), otherVelocity.y);
 				}
 			}
+			Debug.Log ("new trail");
 			//Vector3 correctedDiff = new Vector3(difference.x, difference.y, 0f);
 			//other.transform.position = ((portalExit.transform.position - correctedDiff) + verticalPosModifier * (transform.up * (other.transform.localScale.y /2 + transform.localScale.y / 2)));
 			//Vector2 otherVelocity = other.GetComponent<Rigidbody2D>().velocity;
