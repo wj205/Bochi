@@ -18,6 +18,8 @@ public class ColorWall : MonoBehaviour {
         {
             PlayerController p = other.GetComponent<PlayerController>();
 
+			p.interactableColor = this.color;
+			Debug.Log (p.interactableColor.ToHexStringRGB ());
             p.PushNewTrail(this.color);
         }
     }

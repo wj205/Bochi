@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour {
     public float shotmin;
     public float shotmax = 5f;
 
+	public Color interactableColor;
     private List<PlayerTrail> _prevTrails = new List<PlayerTrail>();
 
     public PlayerState state;
@@ -44,6 +45,8 @@ public class PlayerController : MonoBehaviour {
         _collider = this.GetComponent<Collider2D>();
         _lineRenderer = this.GetComponent<LineRenderer>();
         _startPosition = this.transform.position;
+
+		interactableColor = _levelController.levelColor;
 
         _playerTrail = Instantiate(playerTrailPrefab, this.transform.position, this.transform.rotation) as PlayerTrail;
 
@@ -175,6 +178,7 @@ public class PlayerController : MonoBehaviour {
     void SwitchToMoving() 
     {
         this.ResetPlayerTrail();
+		interactableColor = _levelController.levelColor;
         _levelController.SwitchToState(LevelState.WAITING);
         _collider.enabled = true;
         _lineRenderer.enabled = false;
