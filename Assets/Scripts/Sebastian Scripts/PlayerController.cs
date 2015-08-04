@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour {
     {
         UpdateMousePosition();
         HandleStates();
+		CheckVisible();
     }
 
     void UpdateMousePosition()
@@ -258,6 +259,27 @@ public class PlayerController : MonoBehaviour {
         this.SpawnTrail();
         this.SetColor(c);
     }
+
+	void CheckVisible()
+	{
+		//CHECK IF ALREADY IN LOSE STATE
+		if(
+			transform.position.x > Camera.main.ViewportToWorldPoint (new Vector3(1, 0, Camera.main.nearClipPlane)).x||
+			transform.position.x < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).x||
+			transform.position.y > Camera.main.ViewportToWorldPoint (new Vector3(0, 1, Camera.main.nearClipPlane)).y||
+			transform.position.y < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).y
+			)
+		{
+			StartCoroutine (LeaveLevel());
+			//_levelController.ResetLevel ();
+		}
+	}
+
+	IEnumerator LeaveLevel()
+	{
+		yield return new WaitForSeconds(0.75f);
+		_levelController.ResetLevel ();
+	}
 }
 
 public enum PlayerState
