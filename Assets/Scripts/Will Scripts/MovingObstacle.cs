@@ -2,53 +2,71 @@
 using System.Collections;
 
 public class MovingObstacle : MonoBehaviour {
-
-	public Vector3 position1;
-	public Vector3 position2;
-
+	
 	public float moveSpeed = 1;
 
-	float timer = 0;
+	/*public Vector3 position1;
+	public Vector3 position2;
+
 	bool atPos1 = false;
-	bool atPos2 = false;
+	bool atPos2 = false;*/
+
+	public Vector3[] targetPositions;
+	bool[] atPos;
+
+	void Start()
+	{
+		atPos = new bool[targetPositions.Length];
+	}
 
 	void Update () {
-
-		/*if(timer < moveSpeed / 2f)
+		for(int i = 0; i < targetPositions.Length; i++)
 		{
-			transform.position = Vector3.Lerp (this.transform.position, position2, Time.deltaTime);
-			timer += Time.deltaTime;
-		}else if(timer >= moveSpeed / 2f && timer < moveSpeed)
+			if(isPositionEqual (this.transform.position, targetPositions[i]))
+			{
+				for(int x = 0; x < atPos.Length; x++)
+				{
+					atPos[x] = false;
+				}
+				atPos[i] = true;
+			}
+		}
+		if(isAtPos ())
 		{
-			transform.position = Vector3.Lerp (this.transform.position, position1, Time.deltaTime);
-			timer += Time.deltaTime;
+			MoveObject();
 		}else
 		{
-			timer = 0;
-		}*/
-
-		if(isPositionEqual(this.transform.position, position1))
-		{
-			Debug.Log ("at pos 1");
-			atPos2 = false;
-			atPos1 = true;
-		}else if(isPositionEqual(this.transform.position, position2))
-		{
-			Debug.Log ("at pos 2");
-			atPos1 = false;
-			atPos2 = true;
+			transform.position = Vector3.MoveTowards (this.transform.position, targetPositions[0], Time.deltaTime * moveSpeed);
 		}
+	}
 
-		if(atPos1)
+	void MoveObject()
+	{
+		for(int x = 0; x < atPos.Length; x++)
 		{
-			transform.position = Vector3.MoveTowards (this.transform.position, position2, Time.deltaTime * moveSpeed);
-		}else if(atPos2)
-		{
-			transform.position = Vector3.MoveTowards (this.transform.position, position1, Time.deltaTime * moveSpeed);
-		}else
-		{
-			transform.position = Vector3.MoveTowards (this.transform.position, position1, Time.deltaTime * moveSpeed);
+			if(atPos[x])
+			{
+				if(x == atPos.Length - 1)
+				{
+					transform.position = Vector3.MoveTowards (this.transform.position, targetPositions[0], Time.deltaTime * moveSpeed);
+				}else
+				{
+					transform.position = Vector3.MoveTowards (this.transform.position, targetPositions[x + 1], Time.deltaTime * moveSpeed);
+				}
+			}
 		}
+	}
+
+	bool isAtPos()
+	{
+		for(int i = 0; i < atPos.Length; i++)
+		{
+			if(atPos[i])
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	bool isPositionEqual(Vector3 pos1, Vector3 pos2)
