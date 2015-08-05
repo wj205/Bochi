@@ -270,8 +270,11 @@ public class PlayerController : MonoBehaviour {
 			transform.position.y < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).y
 			)
 		{
-			StartCoroutine (LeaveLevel());
-			//_levelController.ResetLevel ();
+			if(_levelController.state != LevelState.LOADOUT)
+			{
+				StartCoroutine (LeaveLevel());
+				//_levelController.ResetLevel ();
+			}
 		}
 	}
 
