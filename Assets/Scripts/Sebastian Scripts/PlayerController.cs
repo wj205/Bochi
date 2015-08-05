@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour {
     public float shotmin;
     public float shotmax = 5f;
 
+	public Color interactableColor;
     private List<PlayerTrail> _prevTrails = new List<PlayerTrail>();
 
     public PlayerState state;
@@ -45,6 +46,8 @@ public class PlayerController : MonoBehaviour {
         _lineRenderer = this.GetComponent<LineRenderer>();
         _startPosition = this.transform.position;
 
+		interactableColor = _levelController.levelColor;
+
         _playerTrail = Instantiate(playerTrailPrefab, this.transform.position, this.transform.rotation) as PlayerTrail;
 
         this.UpdateMousePosition();
@@ -55,6 +58,7 @@ public class PlayerController : MonoBehaviour {
     {
         UpdateMousePosition();
         HandleStates();
+		CheckVisible();
     }
 
     void UpdateMousePosition()
@@ -175,6 +179,7 @@ public class PlayerController : MonoBehaviour {
     void SwitchToMoving() 
     {
         this.ResetPlayerTrail();
+		interactableColor = _levelController.levelColor;
         _levelController.SwitchToState(LevelState.WAITING);
         _collider.enabled = true;
         _lineRenderer.enabled = false;
@@ -254,6 +259,27 @@ public class PlayerController : MonoBehaviour {
         this.SpawnTrail();
         this.SetColor(c);
     }
+
+	void CheckVisible()
+	{
+		//CHECK IF ALREADY IN LOSE STATE
+		if(
+			transform.position.x > Camera.main.ViewportToWorldPoint (new Vector3(1, 0, Camera.main.nearClipPlane)).x||
+			transform.position.x < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).x||
+			transform.position.y > Camera.main.ViewportToWorldPoint (new Vector3(0, 1, Camera.main.nearClipPlane)).y||
+			transform.position.y < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).y
+			)
+		{
+			StartCoroutine (LeaveLevel());
+			//_levelController.ResetLevel ();
+		}
+	}
+
+	IEnumerator LeaveLevel()
+	{
+		yield return new WaitForSeconds(0.75f);
+		_levelController.ResetLevel ();
+	}
 }
 
 public enum PlayerState
