@@ -270,7 +270,8 @@ public class PlayerController : MonoBehaviour {
 			transform.position.y < Camera.main.ViewportToWorldPoint (new Vector3(0, 0, Camera.main.nearClipPlane)).y
 			)
 		{
-			if(_levelController.state != LevelState.LOADOUT)
+			Debug.Log (_levelController.state);
+			if(_levelController.state == LevelState.WAITING)
 			{
 				StartCoroutine (LeaveLevel());
 				//_levelController.ResetLevel ();
