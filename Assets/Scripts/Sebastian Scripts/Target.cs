@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 public class Target : MonoBehaviour {
 
     private LevelController _levelController;
@@ -10,6 +10,9 @@ public class Target : MonoBehaviour {
 
     public TargetState state = TargetState.UNHIT;
 
+    public float missileSpeed = 5f;
+    private Missile[] _missiles;
+
 	// Use this for initialization
 	void Start () {
         this._levelController = GameObject.FindObjectOfType<LevelController>();
@@ -17,6 +20,8 @@ public class Target : MonoBehaviour {
         this._collider = this.GetComponent<Collider2D>();
 		this._renderer = this.GetComponent<Renderer>();
         this.state = TargetState.UNHIT;
+
+        _missiles = this.GetComponentsInChildren<Missile>();
 	}
 
 
@@ -36,6 +41,10 @@ public class Target : MonoBehaviour {
 
     protected virtual void SwitchToUnhit()
     {
+        for (int i = 0; i < _missiles.Length; i++)
+        {
+            _missiles[i].Reset();
+        }
 
         this._fader.SwitchToState(FadeState.IN);
         this._collider.enabled = true;
@@ -49,18 +58,20 @@ public class Target : MonoBehaviour {
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag.Equals("Player"))
+        if (other.tag.Equals("Player") || other.tag.Equals("Missile"))
         {
 			PlayerController p = other.GetComponent<PlayerController>();
 			if(this.GetComponent<ColorTarget>())
 			{
 				if(isColorEqual(_renderer.material.color, p.interactableColor))
 				{
+                    this.FireMissiles();
 					this.SwitchToState(TargetState.HIT);
-					_levelController.CheckForWinCondition();
+					_levelController.CheckForWinCondition();           
 				}
 			}else
-			{
+            {
+                this.FireMissiles();
             	this.SwitchToState(TargetState.HIT);
             	_levelController.CheckForWinCondition();
 			}
@@ -84,6 +95,14 @@ public class Target : MonoBehaviour {
 			return false;
 		}
 	}
+
+    void FireMissiles()
+    {
+        for (int i = 0; i < _missiles.Length; i++)
+        {
+            _missiles[i].Fire(this.transform.position, missileSpeed);
+        }
+    }
 }
 
 public enum TargetState

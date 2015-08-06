@@ -6,7 +6,7 @@ public class LevelController : MonoBehaviour {
     public LevelState state;
 
     //fader vars
-    public float fadeSpeed = 20f;
+    public float fadeSpeed = 5f;
     private Fader[] _faders;
 
     public Color levelColor;
@@ -107,15 +107,11 @@ public class LevelController : MonoBehaviour {
         for (int i = 0; i < _faders.Length; i++)
         {
             this._faders[i].fadeSpeed = this.fadeSpeed;
-            this._faders[i].SwitchToState(FadeState.IN);
+            if (!this._faders[i].tag.Equals("Player"))
+            {
+                this._faders[i].SwitchToState(FadeState.IN);
+            }
         }
-
-        if (!_player.staticStart)
-        {
-            _player.GetComponent<Fader>().SwitchToState(FadeState.OUT);
-        }
-        
-
     }
 
     void SwitchToIdle() 

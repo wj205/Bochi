@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
 		interactableColor = _levelController.levelColor;
 
         _playerTrail = Instantiate(playerTrailPrefab, this.transform.position, this.transform.rotation) as PlayerTrail;
-
+        
         this.UpdateMousePosition();
         this.SwitchToState(PlayerState.IDLE);
 	}
@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (staticStart) this.transform.position = _startPosition;
         _fader.SetColor(_levelController.levelColor);
-        _fader.SwitchToState(FadeState.IN);
+        _fader.SwitchToState(FadeState.OUT);
         _rigidbody.velocity = Vector2.zero;
        
     }

@@ -7,7 +7,7 @@ public class Fader : MonoBehaviour {
     private Renderer _renderer;
     private Material _material;
     private LevelController _levelController;
-    public FadeState state;
+    public FadeState state = FadeState.IDLE;
 
     public float fadeSpeed = 5f;
     private Color _originalColor;
