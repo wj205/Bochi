@@ -24,45 +24,49 @@ public class PortalObject: MonoBehaviour {
 			Vector2 otherVelocity = other.GetComponent<Rigidbody2D>().velocity;
 			if(portalExit.up)
 			{
-				other.transform.position = new Vector3(portalExit.transform.position.x - difference.x, portalExit.transform.position.y + portalExit.transform.localScale.y / 2f + other.transform.localScale.y / 2f, 0f);
 				if(this.right || this.left)
 				{
+					other.transform.position = new Vector3(portalExit.transform.position.x - difference.y, portalExit.transform.position.y + portalExit.transform.localScale.y / 2f + other.transform.localScale.y / 2f + 0.1f, 0f);
 					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.y, Mathf.Abs (otherVelocity.x));
 				}else
 				{
+					other.transform.position = new Vector3(portalExit.transform.position.x - difference.x, portalExit.transform.position.y + portalExit.transform.localScale.y / 2f + other.transform.localScale.y / 2f + 0.1f, 0f);
 					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.x, Mathf.Abs (otherVelocity.y));
 				}
 			}
 			if(portalExit.down)
 			{
-				other.transform.position = new Vector3(portalExit.transform.position.x - difference.x, portalExit.transform.position.y - portalExit.transform.localScale.y / 2f - other.transform.localScale.y / 2f, 0f);
 				if(this.right || this.left)
 				{
+					other.transform.position = new Vector3(portalExit.transform.position.x - difference.y, portalExit.transform.position.y - portalExit.transform.localScale.y / 2f - other.transform.localScale.y / 2f - 0.1f, 0f);
 					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.y, -Mathf.Abs (otherVelocity.x));
 				}else
 				{
+					other.transform.position = new Vector3(portalExit.transform.position.x - difference.x, portalExit.transform.position.y - portalExit.transform.localScale.y / 2f - other.transform.localScale.y / 2f - 0.1f, 0f);
 					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.x, -Mathf.Abs (otherVelocity.y));
 				}
 			}
 			if(portalExit.right)
 			{
-				other.transform.position = new Vector3(portalExit.transform.position.x + portalExit.transform.localScale.x / 2f + other.transform.localScale.x / 2f, portalExit.transform.position.y - difference.y, 0f);
 				if(this.up || this.down)
 				{
-					other.GetComponent<Rigidbody2D>().velocity = new Vector2(otherVelocity.y, Mathf.Abs (otherVelocity.x));
+					other.transform.position = new Vector3(portalExit.transform.position.x + portalExit.transform.localScale.x / 2f + other.transform.localScale.x / 2f + 0.1f, portalExit.transform.position.y - difference.x, 0f);
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Abs (otherVelocity.y), otherVelocity.x);
 				}else
 				{
+					other.transform.position = new Vector3(portalExit.transform.position.x + portalExit.transform.localScale.x / 2f + other.transform.localScale.x / 2f + 0.1f, portalExit.transform.position.y - difference.y, 0f);
 					other.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Abs (otherVelocity.x), otherVelocity.y);
 				}
 			}
 			if(portalExit.left)
 			{
-				other.transform.position = new Vector3(portalExit.transform.position.x - portalExit.transform.localScale.x / 2f - other.transform.localScale.x / 2f, portalExit.transform.position.y - difference.y, 0f);
 				if(this.up || this.down)
 				{
-					other.GetComponent<Rigidbody2D>().velocity = new Vector2(-otherVelocity.y, Mathf.Abs (otherVelocity.x));	
+					other.transform.position = new Vector3(portalExit.transform.position.x - portalExit.transform.localScale.x / 2f - other.transform.localScale.x / 2f - 0.1f, portalExit.transform.position.y - difference.x, 0f);
+					other.GetComponent<Rigidbody2D>().velocity = new Vector2(-Mathf.Abs (otherVelocity.y), otherVelocity.x);	
 				}else
 				{
+					other.transform.position = new Vector3(portalExit.transform.position.x - portalExit.transform.localScale.x / 2f - other.transform.localScale.x / 2f - 0.1f, portalExit.transform.position.y - difference.y, 0f);
 					other.GetComponent<Rigidbody2D>().velocity = new Vector2(-Mathf.Abs (otherVelocity.x), otherVelocity.y);
 				}
 			}
