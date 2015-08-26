@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+[RequireComponent(typeof(Rotater))]
 public class Target : MonoBehaviour {
 
     private LevelController _levelController;
     private Fader _fader;
     private Collider2D _collider;
 	private Renderer _renderer;
+    private Rotater _rotater;
+    private Quaternion _originalRotation;
 
     public TargetState state = TargetState.UNHIT;
 
@@ -20,7 +23,8 @@ public class Target : MonoBehaviour {
         this._collider = this.GetComponent<Collider2D>();
 		this._renderer = this.GetComponent<Renderer>();
         this.state = TargetState.UNHIT;
-
+        this._rotater = GetComponent<Rotater>();
+        this._originalRotation = this.transform.rotation;
         _missiles = this.GetComponentsInChildren<Missile>();
 	}
 
@@ -41,6 +45,8 @@ public class Target : MonoBehaviour {
 
     protected virtual void SwitchToUnhit()
     {
+        this.transform.rotation = _originalRotation;
+        this._rotater.enabled = true;
         for (int i = 0; i < _missiles.Length; i++)
         {
             _missiles[i].Reset();
@@ -52,8 +58,9 @@ public class Target : MonoBehaviour {
 
     protected virtual void SwitchToHit()
     {
+        this._rotater.enabled = false;
         this._fader.SwitchToState(FadeState.OUT);
-        this._collider.enabled = false;
+        this._collider.enabled = false; 
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)

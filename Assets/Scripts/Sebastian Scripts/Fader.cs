@@ -18,7 +18,7 @@ public class Fader : MonoBehaviour {
         this._renderer = this.GetComponent<Renderer>();
         this._material = this._renderer.material;
         this._levelController = GameObject.FindObjectOfType<LevelController>();
-        if (this.tag.Equals("Player") || this.tag.Equals("Obstacle"))
+        if (this.tag.Equals("Player") || this.tag.Equals("Obstacle") && this._levelController.colorObstacles == true)
         {
             this._originalColor = this._levelController.levelColor;
         }
@@ -104,7 +104,7 @@ public class Fader : MonoBehaviour {
         return (this._material.color.a < 1f ? false : true);
     }
 
-    static bool isColorEqual(Color c1, Color c2)
+    public static bool isColorEqual(Color c1, Color c2)
     {
         float t = 0.01f;
 

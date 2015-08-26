@@ -6,7 +6,6 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(LineRenderer))]
 [RequireComponent(typeof(Fader))]
-
 public class PlayerController : MonoBehaviour {
 
     public bool staticStart = false;

@@ -4,7 +4,7 @@ using System.Collections;
 public class LevelController : MonoBehaviour {
 
     public LevelState state;
-
+    public bool colorObstacles = true;
     //fader vars
     public float fadeSpeed = 5f;
     private Fader[] _faders;
@@ -13,6 +13,8 @@ public class LevelController : MonoBehaviour {
     
     //target vars
     private Target[] _targets;
+    //gravity vars
+    private GravityWell[] _wells;
 
     private PlayerController _player;
 
@@ -21,6 +23,7 @@ public class LevelController : MonoBehaviour {
         this._player = GameObject.FindObjectOfType<PlayerController>();
         this._faders = GameObject.FindObjectsOfType<Fader>();
         this._targets = GameObject.FindObjectsOfType<Target>();
+        this._wells = GameObject.FindObjectsOfType<GravityWell>();
         this.SwitchToState(LevelState.LOADIN);
 	}
 	
@@ -185,7 +188,12 @@ public class LevelController : MonoBehaviour {
             this._targets[i].SwitchToState(TargetState.UNHIT);
         }
 
-        this.SwitchToState(LevelState.LOADIN);
+        for (int i = 0; i < _wells.Length; i++)
+        {
+            this._wells[i].Reset();
+        }
+
+            this.SwitchToState(LevelState.LOADIN);
     }
 }
 
