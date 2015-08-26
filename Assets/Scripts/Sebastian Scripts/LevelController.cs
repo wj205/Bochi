@@ -4,15 +4,17 @@ using System.Collections;
 public class LevelController : MonoBehaviour {
 
     public LevelState state;
-
+    public bool colorObstacles = true;
     //fader vars
-    public float fadeSpeed = 20f;
+    public float fadeSpeed = 5f;
     private Fader[] _faders;
 
     public Color levelColor;
     
     //target vars
     private Target[] _targets;
+    //gravity vars
+    private GravityWell[] _wells;
 
     private PlayerController _player;
 
@@ -21,6 +23,7 @@ public class LevelController : MonoBehaviour {
         this._player = GameObject.FindObjectOfType<PlayerController>();
         this._faders = GameObject.FindObjectsOfType<Fader>();
         this._targets = GameObject.FindObjectsOfType<Target>();
+        this._wells = GameObject.FindObjectsOfType<GravityWell>();
         this.SwitchToState(LevelState.LOADIN);
 	}
 	
@@ -107,15 +110,11 @@ public class LevelController : MonoBehaviour {
         for (int i = 0; i < _faders.Length; i++)
         {
             this._faders[i].fadeSpeed = this.fadeSpeed;
-            this._faders[i].SwitchToState(FadeState.IN);
+            if (!this._faders[i].tag.Equals("Player"))
+            {
+                this._faders[i].SwitchToState(FadeState.IN);
+            }
         }
-
-        if (!_player.staticStart)
-        {
-            _player.GetComponent<Fader>().SwitchToState(FadeState.OUT);
-        }
-        
-
     }
 
     void SwitchToIdle() 
@@ -189,7 +188,12 @@ public class LevelController : MonoBehaviour {
             this._targets[i].SwitchToState(TargetState.UNHIT);
         }
 
-        this.SwitchToState(LevelState.LOADIN);
+        for (int i = 0; i < _wells.Length; i++)
+        {
+            this._wells[i].Reset();
+        }
+
+            this.SwitchToState(LevelState.LOADIN);
     }
 }
 

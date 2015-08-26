@@ -1,14 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
+[RequireComponent(typeof(Rotater))]
 public class Target : MonoBehaviour {
 
     private LevelController _levelController;
     private Fader _fader;
     private Collider2D _collider;
 	private Renderer _renderer;
+    private Rotater _rotater;
+    private Quaternion _originalRotation;
 
     public TargetState state = TargetState.UNHIT;
+
+    public float missileSpeed = 5f;
+    private Missile[] _missiles;
 
 	// Use this for initialization
 	void Start () {
@@ -17,6 +23,9 @@ public class Target : MonoBehaviour {
         this._collider = this.GetComponent<Collider2D>();
 		this._renderer = this.GetComponent<Renderer>();
         this.state = TargetState.UNHIT;
+        this._rotater = GetComponent<Rotater>();
+        this._originalRotation = this.transform.rotation;
+        _missiles = this.GetComponentsInChildren<Missile>();
 	}
 
 
@@ -36,6 +45,12 @@ public class Target : MonoBehaviour {
 
     protected virtual void SwitchToUnhit()
     {
+        this.transform.rotation = _originalRotation;
+        this._rotater.enabled = true;
+        for (int i = 0; i < _missiles.Length; i++)
+        {
+            _missiles[i].Reset();
+        }
 
         this._fader.SwitchToState(FadeState.IN);
         this._collider.enabled = true;
@@ -43,24 +58,27 @@ public class Target : MonoBehaviour {
 
     protected virtual void SwitchToHit()
     {
+        this._rotater.enabled = false;
         this._fader.SwitchToState(FadeState.OUT);
-        this._collider.enabled = false;
+        this._collider.enabled = false; 
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag.Equals("Player"))
+        if (other.tag.Equals("Player") || other.tag.Equals("Missile"))
         {
 			PlayerController p = other.GetComponent<PlayerController>();
 			if(this.GetComponent<ColorTarget>())
 			{
 				if(isColorEqual(_renderer.material.color, p.interactableColor))
 				{
+                    this.FireMissiles();
 					this.SwitchToState(TargetState.HIT);
-					_levelController.CheckForWinCondition();
+					_levelController.CheckForWinCondition();           
 				}
 			}else
-			{
+            {
+                this.FireMissiles();
             	this.SwitchToState(TargetState.HIT);
             	_levelController.CheckForWinCondition();
 			}
@@ -84,6 +102,14 @@ public class Target : MonoBehaviour {
 			return false;
 		}
 	}
+
+    void FireMissiles()
+    {
+        for (int i = 0; i < _missiles.Length; i++)
+        {
+            _missiles[i].Fire(this.transform.position, missileSpeed);
+        }
+    }
 }
 
 public enum TargetState
