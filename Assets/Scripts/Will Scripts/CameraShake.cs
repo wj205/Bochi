@@ -11,14 +11,6 @@ public class CameraShake : MonoBehaviour {
 		baseCameraPosition = Camera.main.transform.position;
 	}
 
-	void Update()
-	{
-		if(Input.GetKeyDown (KeyCode.Space))
-		{
-			ScreenShake ();
-		}
-	}
-
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		ScreenShake ();
