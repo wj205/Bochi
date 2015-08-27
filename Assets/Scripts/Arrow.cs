@@ -133,7 +133,6 @@ public class Arrow : MonoBehaviour {
 	
 	void OnCollisionEnter2D(Collision2D other)
 	{
-		Camera.main.GetComponent<CameraShake>().ScreenShake ();
 		if(other.gameObject.tag == "Red")
 		{
 			_renderer.material.color = Color.red;
