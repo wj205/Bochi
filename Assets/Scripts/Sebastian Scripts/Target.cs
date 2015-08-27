@@ -24,6 +24,7 @@ public class Target : MonoBehaviour {
 		this._renderer = this.GetComponent<Renderer>();
         this.state = TargetState.UNHIT;
         this._rotater = GetComponent<Rotater>();
+		if (!this._rotater) this._rotater = this.gameObject.AddComponent<Rotater>(); //testing
         this._originalRotation = this.transform.rotation;
         _missiles = this.GetComponentsInChildren<Missile>();
 	}
