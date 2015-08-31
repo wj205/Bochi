@@ -18,10 +18,23 @@ public class Accelerator : MonoBehaviour {
 	{
 		if(other.tag == "Player")
 		{
-			Debug.Log (_playerRigidbody.velocity);
-			//_playerRigidbody.AddForce (_playerRigidbody.velocity.normalized + acceleratorForce, ForceMode2D.Impulse);
-			_playerRigidbody.velocity += (_playerRigidbody.velocity.normalized * acceleratorForce);
-			Debug.Log (_playerRigidbody.velocity);
+			Accelerate ();
 		}
+	}
+
+	void OnCollisionEnter2D(Collision2D other)
+	{
+		if(other.gameObject.tag == "Player")
+		{
+			Accelerate ();
+		}
+	}
+
+	void Accelerate()
+	{
+		Debug.Log (_playerRigidbody.velocity);
+		//_playerRigidbody.AddForce (_playerRigidbody.velocity.normalized + acceleratorForce, ForceMode2D.Impulse);
+		_playerRigidbody.velocity += (_playerRigidbody.velocity.normalized * acceleratorForce);
+		Debug.Log (_playerRigidbody.velocity);
 	}
 }
