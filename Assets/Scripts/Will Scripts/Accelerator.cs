@@ -33,8 +33,11 @@ public class Accelerator : MonoBehaviour {
 	void Accelerate()
 	{
 		Debug.Log (_playerRigidbody.velocity);
-		//_playerRigidbody.AddForce (_playerRigidbody.velocity.normalized + acceleratorForce, ForceMode2D.Impulse);
-		_playerRigidbody.velocity += (_playerRigidbody.velocity.normalized * acceleratorForce);
-		Debug.Log (_playerRigidbody.velocity);
+		if(Mathf.Abs (_playerRigidbody.velocity.x) + Mathf.Abs (_playerRigidbody.velocity.y) <= 25f)
+		{
+			//_playerRigidbody.AddForce (_playerRigidbody.velocity.normalized + acceleratorForce, ForceMode2D.Impulse);
+			_playerRigidbody.velocity += (_playerRigidbody.velocity.normalized * acceleratorForce);
+			Debug.Log (_playerRigidbody.velocity);
+		}
 	}
 }
