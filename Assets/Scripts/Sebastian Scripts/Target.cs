@@ -10,7 +10,7 @@ public class Target : MonoBehaviour {
 	private Renderer _renderer;
     private Rotater _rotater;
     private Quaternion _originalRotation;
-    private ColorFlash _flash;
+
     public TargetState state = TargetState.UNHIT;
 
     public float missileSpeed = 5f;
@@ -19,7 +19,6 @@ public class Target : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         this._levelController = GameObject.FindObjectOfType<LevelController>();
-        this._flash = GameObject.FindObjectOfType<ColorFlash>();
         this._fader = this.GetComponent<Fader>();
         this._collider = this.GetComponent<Collider2D>();
 		this._renderer = this.GetComponent<Renderer>();
@@ -74,14 +73,12 @@ public class Target : MonoBehaviour {
 			{
 				if(isColorEqual(_renderer.material.color, p.interactableColor))
 				{
-                    this._flash.flashColor(_renderer.material.color);
                     this.FireMissiles();
 					this.SwitchToState(TargetState.HIT);
 					_levelController.CheckForWinCondition();           
 				}
 			}else
             {
-                this._flash.flashColor(_renderer.material.color);
                 this.FireMissiles();
             	this.SwitchToState(TargetState.HIT);
             	_levelController.CheckForWinCondition();
