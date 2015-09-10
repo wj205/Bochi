@@ -15,10 +15,10 @@ public class Destroyer : MonoBehaviour {
     {
         if (other.gameObject.tag.Equals("Player"))
         {
-			death.Play();
 			//_levelController.ResetLevel();
 			if(_levelController.state == LevelState.WAITING)
 			{
+				death.Play();
             	_levelController.ResetLevel();
 			}
         }
