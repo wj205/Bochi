@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour {
     private PlayerTrail _playerTrail;
     public PlayerTrail playerTrailPrefab;
 
+   	//private ColorFlash _flash;
+
     public float lineMaxDist = 5f;
 
     private Vector3 _mousePosition = Vector3.zero;
@@ -43,6 +45,7 @@ public class PlayerController : MonoBehaviour {
         _rigidbody = this.GetComponent<Rigidbody2D>();
         _collider = this.GetComponent<Collider2D>();
         _lineRenderer = this.GetComponent<LineRenderer>();
+        //_flash = GameObject.FindObjectOfType<ColorFlash>();
         _startPosition = this.transform.position;
 
 		interactableColor = _levelController.levelColor;
@@ -183,8 +186,14 @@ public class PlayerController : MonoBehaviour {
         _collider.enabled = true;
         _lineRenderer.enabled = false;
         float shotSpeed = Mathf.Clamp(GetArrowMagnitude(), shotmin, shotmax);
-        _rigidbody.AddForce(difference * shotSpeed, ForceMode2D.Impulse);
-        _rigidbody.gravityScale = _gravity;
+		if(shotSpeed == 0)
+		{
+			_levelController.ResetLevel ();
+		}else
+		{
+	        _rigidbody.AddForce(difference * shotSpeed, ForceMode2D.Impulse);
+	        _rigidbody.gravityScale = _gravity;
+		}
     }
 
     void SwitchToDisabled() { }
