@@ -18,8 +18,11 @@ public class Destroyer : MonoBehaviour {
 			//_levelController.ResetLevel();
 			if(_levelController.state == LevelState.WAITING)
 			{
-				death.Play();
-            	_levelController.ResetLevel();
+				_levelController.ResetLevel();
+				if(death != null)
+				{
+					death.Play();
+				}
 			}
         }
     }
