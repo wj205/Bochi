@@ -4,6 +4,7 @@ using System.Collections;
 public class Destroyer : MonoBehaviour {
 
     LevelController _levelController;
+	public AudioSource death; 
 
 	// Use this for initialization
 	void Start () {
@@ -14,7 +15,8 @@ public class Destroyer : MonoBehaviour {
     {
         if (other.gameObject.tag.Equals("Player"))
         {
-            _levelController.ResetLevel();
+			death.Play();
+			_levelController.ResetLevel();
         }
     }
 }
