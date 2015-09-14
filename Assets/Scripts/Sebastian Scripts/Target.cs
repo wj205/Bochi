@@ -11,6 +11,8 @@ public class Target : MonoBehaviour {
     private Rotater _rotater;
     private Quaternion _originalRotation;
 
+    private ColorFlash _flash;
+
     public TargetState state = TargetState.UNHIT;
 
     public float missileSpeed = 5f;
@@ -27,6 +29,7 @@ public class Target : MonoBehaviour {
 		if (!this._rotater) this._rotater = this.gameObject.AddComponent<Rotater>(); //testing
         this._originalRotation = this.transform.rotation;
         _missiles = this.GetComponentsInChildren<Missile>();
+        _flash = Camera.main.GetComponent<ColorFlash>();
 	}
 
 
@@ -75,6 +78,7 @@ public class Target : MonoBehaviour {
 				{
                     this.FireMissiles();
 					this.SwitchToState(TargetState.HIT);
+                    if (_flash) _flash.Flash(this._renderer.material.color);
 					_levelController.CheckForWinCondition();           
 				}
 			}else
