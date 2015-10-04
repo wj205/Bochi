@@ -16,11 +16,13 @@ public class CameraShakeDampened : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		BackgroundPlane.value = 1f;
 		StartCoroutine(Shake ());
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
 	{
+		BackgroundPlane.value = 1f;
 		StartCoroutine(Shake ());
 	}
 
