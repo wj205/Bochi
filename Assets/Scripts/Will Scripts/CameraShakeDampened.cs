@@ -6,6 +6,13 @@ public class CameraShakeDampened : MonoBehaviour {
 	public float duration = 0.15f;
 	public float magnitude = 0.1f;
 
+	EffectsController _effectsController;
+
+	void Start()
+	{
+		_effectsController = GameObject.FindObjectOfType<EffectsController>().GetComponent<EffectsController>();
+	}
+
 	void Update()
 	{
 		if(Input.GetKeyDown (KeyCode.Space))
@@ -16,12 +23,14 @@ public class CameraShakeDampened : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		_effectsController.TurnOnBackgroundEffects ();
 		BackgroundPlane.value = 1f;
 		StartCoroutine(Shake ());
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
 	{
+		_effectsController.TurnOnBackgroundEffects ();
 		BackgroundPlane.value = 1f;
 		StartCoroutine(Shake ());
 	}
