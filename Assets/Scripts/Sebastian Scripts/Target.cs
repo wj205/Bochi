@@ -103,10 +103,10 @@ public class Target : MonoBehaviour {
 		{
 			ParticleSystem newDestroyParticle = Instantiate (destroyParticle, transform.position, Quaternion.identity) as ParticleSystem;
 			newDestroyParticle.startColor = _renderer.material.color;
+		}
 	        this._rotater.enabled = false;
 	        this._fader.SwitchToState(FadeState.OUT);
 	        this._collider.enabled = false; 
-		}
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
