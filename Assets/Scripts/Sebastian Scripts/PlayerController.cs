@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour {
     private LineRenderer _lineRenderer;
     private PlayerTrail _playerTrail;
     public PlayerTrail playerTrailPrefab;
+	//private AimingGuide _aimingGuide;
 
    	//private ColorFlash _flash;
 
@@ -45,6 +46,7 @@ public class PlayerController : MonoBehaviour {
         _rigidbody = this.GetComponent<Rigidbody2D>();
         _collider = this.GetComponent<Collider2D>();
         _lineRenderer = this.GetComponent<LineRenderer>();
+		//_aimingGuide = GameObject.FindObjectOfType<AimingGuide>().GetComponent<AimingGuide>();
         //_flash = GameObject.FindObjectOfType<ColorFlash>();
         _startPosition = this.transform.position;
 
@@ -117,6 +119,7 @@ public class PlayerController : MonoBehaviour {
             transform.rotation = Quaternion.Euler(0f, 0f, GetArrowAngle());
         
         DrawLine();
+		//_aimingGuide.DrawLine (this.gameObject);
 
         if (Input.GetMouseButtonUp(0))
         {

@@ -19,8 +19,6 @@ public class BackgroundPlane : GenericPerlinObject {
         {
             value = 0;
         }
-		
-		Debug.Log (value);
 
         for (int i = 0; i < _verts.Length; i++)
         {

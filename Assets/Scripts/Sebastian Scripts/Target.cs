@@ -16,7 +16,11 @@ public class Target : MonoBehaviour {
     public TargetState state = TargetState.UNHIT;
 
     public float missileSpeed = 5f;
-    private Missile[] _missiles;
+	private Missile[] _missiles;
+	public float maxScale;
+	public float minScale;
+	public float pulseSpeed;
+	Vector3 pulseVector;
 
 	// Use this for initialization
 	void Start () {
@@ -28,8 +32,39 @@ public class Target : MonoBehaviour {
         this._rotater = GetComponent<Rotater>();
 		if (!this._rotater) this._rotater = this.gameObject.AddComponent<Rotater>(); //testing
         this._originalRotation = this.transform.rotation;
-        _missiles = this.GetComponentsInChildren<Missile>();
-        _flash = Camera.main.GetComponent<ColorFlash>();
+		_missiles = this.GetComponentsInChildren<Missile>();
+		_flash = Camera.main.GetComponent<ColorFlash>();
+	}
+
+	bool up = true;
+	void Update()
+	{
+		if(this.state == TargetState.UNHIT)
+		{
+			if(transform.localScale.x < maxScale && up)
+			{
+				pulseVector = new Vector3(Mathf.Lerp (transform.localScale.x, maxScale + 0.5f, Time.deltaTime * pulseSpeed),
+				                          Mathf.Lerp (transform.localScale.y, maxScale + 0.5f, Time.deltaTime * pulseSpeed),
+				                       0f);
+				transform.localScale = pulseVector;
+			}else if(transform.localScale.x >= maxScale)
+			{
+				up = false;
+				pulseVector = new Vector3(Mathf.Lerp (transform.localScale.x, minScale - 0.5f, Time.deltaTime * pulseSpeed),
+				                          Mathf.Lerp (transform.localScale.y, minScale - 0.5f, Time.deltaTime * pulseSpeed),
+				                       0f);
+				transform.localScale = pulseVector;
+			}else if(transform.localScale.x < maxScale && transform.localScale.x > minScale && !up)
+			{
+				pulseVector = new Vector3(Mathf.Lerp (transform.localScale.x, minScale - 0.5f, Time.deltaTime * pulseSpeed),
+				                          Mathf.Lerp (transform.localScale.y, minScale - 0.5f, Time.deltaTime * pulseSpeed),
+				                       0f);
+				transform.localScale = pulseVector;
+			}else if(transform.localScale.x <= minScale && !up)
+			{
+				up = true;
+			}
+		}
 	}
 
 
@@ -60,8 +95,12 @@ public class Target : MonoBehaviour {
         this._collider.enabled = true;
     }
 
+
+	public ParticleSystem destroyParticle;
     protected virtual void SwitchToHit()
     {
+		ParticleSystem newDestroyParticle = Instantiate (destroyParticle, transform.position, Quaternion.identity) as ParticleSystem;
+		newDestroyParticle.startColor = _renderer.material.color;
         this._rotater.enabled = false;
         this._fader.SwitchToState(FadeState.OUT);
         this._collider.enabled = false; 

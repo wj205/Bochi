@@ -8,11 +8,21 @@ public class MainMenuController : MonoBehaviour {
 
 	void Start()
 	{
-		startLevel = PlayerPrefs.GetInt ("CurrentLevel", 1); //Default to the first level
+		startLevel = PlayerPrefs.GetInt ("CurrentLevel", 0); //Default to the first level
 	}
 
 	public void StartGame()
 	{
 		Application.LoadLevel(startLevel);
+	}
+
+	public void GoToLevelSelect()
+	{
+		Application.LoadLevel ("LevelSelect");
+	}
+
+	public void GoToOptions()
+	{
+		Application.LoadLevel ("Options");
 	}
 }

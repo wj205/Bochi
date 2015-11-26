@@ -20,6 +20,8 @@ public class LevelController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		PlayerPrefs.SetInt ("CurrentLevel", Application.loadedLevel);
+		CheckIfFurthestLevel();
         this._player = GameObject.FindObjectOfType<PlayerController>();
         this._faders = GameObject.FindObjectsOfType<Fader>();
         this._targets = GameObject.FindObjectsOfType<Target>();
@@ -30,6 +32,19 @@ public class LevelController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         HandleStates();
+		if(Input.GetKeyDown (KeyCode.Escape))
+		{
+			Application.LoadLevel ("menu_main");
+		}
+	}
+
+	void CheckIfFurthestLevel()
+	{
+		int furthestLevel = PlayerPrefs.GetInt ("FurthestLevel", 0);
+		if(Application.loadedLevel > furthestLevel)
+		{
+			PlayerPrefs.SetInt ("FurthestLevel", Application.loadedLevel);
+		}
 	}
 
     void HandleStates()
