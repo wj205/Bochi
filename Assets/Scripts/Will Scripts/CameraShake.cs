@@ -6,10 +6,12 @@ public class CameraShake : MonoBehaviour {
 	public float shakeLength = 0.3f;
 	public float shakeStrength = 1f;
 	Vector3 baseCameraPosition;
+	LevelController _levelController;
 
 	void Start()
 	{
 		baseCameraPosition = Camera.main.transform.position;
+		_levelController = GameObject.FindObjectOfType<LevelController>();
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -25,7 +27,10 @@ public class CameraShake : MonoBehaviour {
 	void ScreenShake()
 	{
 		//shakeLength = 1f;
-		StartCoroutine ("ScreenShakeCoroutine");
+		if(_levelController.state != LevelState.LOADOUT)
+		{
+			StartCoroutine ("ScreenShakeCoroutine");
+		}
 	}
 
 	IEnumerator ScreenShakeCoroutine()
