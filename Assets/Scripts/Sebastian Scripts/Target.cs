@@ -96,13 +96,19 @@ public class Target : MonoBehaviour {
     }
 
 
-	public ParticleSystem destroyParticle;
+	public GameObject destroyParticle;
     protected virtual void SwitchToHit()
     {
 		if(destroyParticle != null)
 		{
-			ParticleSystem newDestroyParticle = Instantiate (destroyParticle, transform.position, Quaternion.identity) as ParticleSystem;
-			newDestroyParticle.startColor = _renderer.material.color;
+			GameObject newDestroyParticle = Instantiate (destroyParticle, transform.position, Quaternion.identity) as GameObject;
+			if(newDestroyParticle.GetComponent<ParticleSystem>() != null)
+			{
+				newDestroyParticle.GetComponent<ParticleSystem>().startColor = this._renderer.material.color;
+			}else
+			{
+				newDestroyParticle.GetComponent<ParticleRenderer>().material.color = this._renderer.material.color;
+			}
 		}
 	        this._rotater.enabled = false;
 	        this._fader.SwitchToState(FadeState.OUT);
