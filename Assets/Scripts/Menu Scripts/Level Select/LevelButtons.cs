@@ -12,6 +12,11 @@ public class LevelButtons : MonoBehaviour, IPointerClickHandler {
 	void Start()
 	{
 		_button = this.GetComponent<Button>();
+		//CheckIfLocked();
+	}
+
+	void CheckIfLocked()
+	{
 		if(PlayerPrefs.GetInt ("FurthestLevel", 0) < levelBuildInteger)
 		{
 			SetLevelLocked();
@@ -26,10 +31,15 @@ public class LevelButtons : MonoBehaviour, IPointerClickHandler {
 		}
 	}
 
-	void SetLevelLocked()
+	public void SetLevelLocked()
 	{
 		locked = true;
-		_button.interactable = false;
+		this.GetComponent<Button>().interactable = false;
+	}
+
+	public void SetText(int levelNum)
+	{
+		this.GetComponentInChildren<Text>().text = "Level " + levelNum;
 	}
 
 	public void LoadLevel()
