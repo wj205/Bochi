@@ -93,6 +93,10 @@ public class Target : MonoBehaviour {
 
         this._fader.SwitchToState(FadeState.IN);
         this._collider.enabled = true;
+		if(this.transform.childCount > 0)
+		{
+			this.transform.GetChild (0).gameObject.SetActive (true);
+		}
     }
 
 
@@ -102,6 +106,10 @@ public class Target : MonoBehaviour {
 		if(destroyObj != null)
 		{
 			GameObject newDestroyParticle = Instantiate (destroyObj, transform.position, Quaternion.identity) as GameObject;
+			if(this.transform.childCount > 0)
+			{
+				this.transform.GetChild(0).gameObject.SetActive(false);
+			}
 			if(newDestroyParticle.GetComponent<ParticleSystem>() != null)
 			{
 				newDestroyParticle.GetComponent<ParticleSystem>().startColor = this._renderer.material.color;
