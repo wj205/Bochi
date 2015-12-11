@@ -110,9 +110,10 @@ public class Target : MonoBehaviour {
 				newDestroyParticle.GetComponent<TargetDestroyObjHandler>().objColor = this._renderer.material.color;
 			}
 		}
-	        this._rotater.enabled = false;
-	        this._fader.SwitchToState(FadeState.OUT);
-	        this._collider.enabled = false; 
+	    this._rotater.enabled = false;
+		this._fader.fadeSpeed = 50f;
+	    this._fader.SwitchToState(FadeState.OUT);
+        this._collider.enabled = false; 
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)

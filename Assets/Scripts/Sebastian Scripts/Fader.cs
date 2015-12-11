@@ -77,7 +77,7 @@ public class Fader : MonoBehaviour {
         }
     }
 
-    public void SwitchToState(FadeState s)
+	public void SwitchToState(FadeState s)
     {
         this.state = s;
         switch (this.state)
